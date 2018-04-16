@@ -1,0 +1,25 @@
+#
+# Parameters used by the auto-installation
+# 
+ZIPS_PATH=/home/vmuser/SoftwareDL
+
+#
+# Database 
+#
+DB_INSTALL=Y
+DB_DEFAULT_PASSWORD=password
+DB_SYS=password
+
+#
+# ORDS
+#
+ORDS_INSTALL=Y
+ORDS_PATH=/u01/
+
+#
+# APEX
+#
+APEX_UPGRADE=Y
+
+# Optional
+AUTO_DEBUG=
