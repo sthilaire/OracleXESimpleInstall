@@ -1,25 +1,35 @@
 #
-# Parameters used by the auto-installation
-# 
-ZIPS_PATH=/home/vmuser/SoftwareDL
+# Parameters used by the auto-installation scripting
+#
+# ZIPS_PATH: location of downloads. Can be absolute or relative to script location.
+# When the project has been downloaded to the same location as the binaries, 
+# the default is ../
+ZIPS_PATH=../
 
 #
-# Database 
+# XE Database 
 #
-DB_INSTALL=Y
-DB_DEFAULT_PASSWORD=password
-DB_SYS=password
+XE_INSTALL=Y
+XE_DEFAULT_PASSWORD=password
+XE_SYS=password
 
 #
 # ORDS
 #
+# ORDS_INSTALL: Set to Y for ORDS install
 ORDS_INSTALL=Y
-ORDS_PATH=/u01/
+# ORDS_PATH: directory where ords binaries will be placed. 
+# This will also be the location of the apex static files and configuration
+ORDS_PATH=/u01/app/oracle/ords
 
 #
 # APEX
 #
+# APEX_UPGRADE: Set to Y to perform an upgard of the default XE apex.
 APEX_UPGRADE=Y
 
+
+
 # Optional
-AUTO_DEBUG=
+# AUTO_DEBUG: set to Y to see expanded script output (script debugging)
+# AUTO_DEBUG=Y

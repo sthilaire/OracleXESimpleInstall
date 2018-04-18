@@ -1,12 +1,13 @@
-#!/bin/bash -x
+#!/bin/bash
 
 IFS="="
 while read -r paramName paramValue
 do
-    #echo "Content of $paramName is ${paramValue//\"/}"
     if [ -n "$paramName" ]; then
-        echo "parma Name = " $paramName
         eval "export $paramName=${paramValue//\"/}"
     fi
 done < <(grep '^\w\+ *=' "$1")
+
+echo "=== Verify files"
+source $THIS_DIR/scripts/auto_verify_files.sh
 
