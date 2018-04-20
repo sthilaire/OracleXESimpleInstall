@@ -16,10 +16,10 @@ echo "*** TBD - SED the default parameter file to include passwords from param f
 echo "... burn the configdir into the ords.war"
 java -jar $ORDS_PATH/ords.war configdir $ORDS_PATH/config/
 
-if [[ $APEX_UPGRADE= "Y" ]]
+if [[ "$APEX_UPGRADE" = "Y" ]]
 then
     echo "... copy apex web objects for use by standalone ORDS"
-    cp -r $ZIPS_PATH/images $ORDS_PATH/apex_images
+    cp -r $ZIPS_PATH/working/apex/images $ORDS_PATH/apex_images
 fi
 
 echo "*** TBD - Set permissions to allow service to run ***"
