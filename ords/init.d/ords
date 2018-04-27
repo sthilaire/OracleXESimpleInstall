@@ -1,0 +1,90 @@
+#!/bin/bash +x
+# chkconfig: 22345 99 10
+#
+# https://warp11.nl/2012/02/apex-listener-startupshutdown-script/
+# http://krisrice.io/2010-12-10-listener-startupshutdown-script/
+#
+. /etc/rc.d/init.d/functions
+NAME="Oracle Rest Data Services"
+export JAVA="/usr/bin/java"
+ORDSWAR="/u01/app/oracle/ords/ords.war"
+ORDSUSER="oracle"
+
+export OPTIONS="-Xmx1024m -Xms256m -jar $ORDSWAR"
+export LOGFILE="/u01/app/oracle/ords/logs/ords.log"
+PIDFILE="/u01/app/oracle/ords/logs/ords.pid"
+
+start() {
+        echo -n "Starting $NAME: "
+        if [ -f $PIDFILE ]; then
+                PID=$(<$PIDFILE)
+                echo ORDS already running: $PID
+                exit 2;
+        else
+                su $ORDSUSER -c "$JAVA $OPTIONS > $LOGFILE 2>&1 &"  
+                RETVAL=$(pgrep -f -u $ORDSUSER $ORDSWAR)
+                echo Started PID: $RETVAL 
+                echo $RETVAL >>$PIDFILE
+		exit 0;
+        fi
+}
+
+status() {
+        echo -n "Status $NAME: "
+        if [ -f $PIDFILE ]; then
+                PID=$(<$PIDFILE)
+                echo ORDS already running: $PID
+                pgrep -a -F $PIDFILE
+        else
+                echo ORDS not running
+        fi
+}
+
+stop() {
+        echo "Stopping..."
+        PID=$(pgrep -u $ORDSUSER -f $ORDSWAR)
+        
+        if [ -f $PIDFILE ]; then
+                PIDF=$(<$PIDFILE)
+                if [ "$PID" = "$PIDF" ]; then 
+                    echo -n "Shutting down $NAME "
+                    echo
+                    kill $PID
+                fi
+                rm -f $PIDFILE
+        elif [ -n "$PID" ]; then
+	        echo "Shutting down un-tracked process..."
+                kill $PID
+        else
+                echo "ORDS not running"	
+        fi
+        return 0
+}
+
+log() {
+        tail -f $LOGFILE
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    log)
+        log
+        ;;
+    *)
+        echo "Usage:  {start|stop|status|restart|log}"
+        exit 1
+        ;;
+esac
+exit $?
