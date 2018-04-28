@@ -12,6 +12,15 @@ source $THIS_DIR/scripts/auto_load_params.sh $THIS_DIR/scripts/autoInstall.param
 
 env | grep ZIPS
 
+if [[ $XE_INSTALL = "Y" ]]
+then
+    echo "=== Install XE Database"
+    echo "...  file = " $XE_ZIP
+    $THIS_DIR/scripts/auto_xe_install.sh
+else
+    echo "... not installing XE"
+fi
+
 if [[ $ORDS_INSTALL = "Y" ]]
 then
     echo "=== Install ORDS"
@@ -20,6 +29,7 @@ then
 else
     echo "... not installing ORDS"
 fi
+
 
 
 echo "=== Done"
