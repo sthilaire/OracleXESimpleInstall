@@ -24,16 +24,18 @@ then
     cp -r $ZIPS_PATH/working/apex/images $ORDS_PATH/apex_images
 fi
 
-echo "... Set permissions to allow service to run as user $ORDSUSER"
-chown -R oracle:dba $ORDS_PATH
+echo "... Set permissions to allow service to run as user: $ORDS_USER"
+chown -R $ORDS_USER:dba $ORDS_PATH
 
 echo "... copy startup script"
 cp $THIS_DIR/ords/init.d/ords /etc/init.d
 
+## note - this is a combination of old and new startup technology....
 echo "... update the systemctl registrations"
 systemctl daemon-reload
-
-echo "... start service"
+##echo "... enable ORDS to start on boot"
+##systemctl enable ords
+echo "... start ORDS service"
 service ords start
 
 
