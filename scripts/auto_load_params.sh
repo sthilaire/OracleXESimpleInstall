@@ -8,6 +8,4 @@ do
     fi
 done < <(grep '^\w\+ *=' "$1")
 
-echo "=== Verify files"
-source $THIS_DIR/scripts/auto_verify_files.sh
 
