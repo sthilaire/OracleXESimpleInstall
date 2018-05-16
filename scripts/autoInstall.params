@@ -2,12 +2,12 @@
 # Parameters used by the auto-installation scripting
 #
 # ZIPS_PATH: location of downloads. Can be absolute or relative to script location.
-# When the project has been downloaded to the same location as the binaries, 
+# When the project has been downloaded to the same location as the binaries,
 # the default is ../
 ZIPS_PATH=../
 
 #
-# XE Database 
+# XE Database
 #
 XE_INSTALL=Y
 XE_DEFAULT_PASSWORD=password
@@ -17,11 +17,14 @@ XE_DEFAULT_PASSWORD=password
 #
 # ORDS_INSTALL: Set to Y for ORDS install
 ORDS_INSTALL=Y
-# ORDS_PATH: directory where ords binaries will be placed. 
+
+# ORDS_PATH: directory where ords binaries will be placed.
 # This is also the location of the apex static files, configuration and logs
 ORDS_PATH=/u01/app/oracle/ords
+
 # ORDS_USER : Value for ORDS running process
 ORDS_USER=oracle
+
 #
 #
 #
