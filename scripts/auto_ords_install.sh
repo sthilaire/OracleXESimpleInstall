@@ -1,6 +1,4 @@
-#!/bin/bash 
-
-[ -n "$AUTO_DEBUG" ] && set -x
+#!/bin/bash
 
 echo "... Unzip ords in directory = $ZIPS_PATH"
 
@@ -12,6 +10,8 @@ mkdir -p $ORDS_PATH/config/ords/standalone/doc_root
 cp -r $THIS_DIR/ords/doc_root $ORDS_PATH/config/ords/standalone/
 cp -r $THIS_DIR/ords/params $ORDS_PATH
 
+source $(ls -1 /u01/app/oracle/product/*/xe/bin/oracle_env.sh)
+
 echo "*** TBD - SED the default parameter file to include passwords from param file ***"
 
 # Links and shortcuts that are installed with XE use /apex/
@@ -22,7 +22,8 @@ echo "... burn the configdir into the ords.war"
 # This is to cover the chance that someone starts the ORDS manually
 java -jar $ORDS_PATH/ords.war configdir $ORDS_PATH/config/
 
-java -Dconfig.dir=$ORDS_PATH/config/ -jar $ORDS_PATH/ords.war install simple --preserveParamFile
+## -DuseOracleHome=true use for 11g bequeath authentication
+java -DuseOracleHome=true -jar $ORDS_PATH/ords.war install simple
 
 if [[ "$APEX_UPGRADE" = "Y" ]]
 then
@@ -32,7 +33,6 @@ fi
 
 echo "... Set permissions to allow service to run as user: $ORDS_USER"
 chown -R $ORDS_USER:dba $ORDS_PATH
-
 
 ## note - this is a combination of old and new startup technology....
 ## This is an area for improvement

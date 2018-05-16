@@ -2,14 +2,14 @@
 
 echo "... unzip XE"
 if [[ -f "$XE_ZIP"  ]]
-then 
+then
     unzip -q $XE_ZIP -d $ZIPS_PATH/working
 else
     echo "... Missing: $XE_ZIP"
     echo "... XE install requested, but file does not exist.  Why are you here??" && exit 0
 fi
 
-echo "... Install the XE RPM"   
+echo "... Install the XE RPM"
 rpm -ivh $(ls -1 $ZIPS_PATH/working/Disk1/oracle-xe*.rpm) > $ZIPS_PATH/XeSilentInstall.log
 
 echo "... Config XE"
@@ -31,3 +31,4 @@ echo "..."
 echo "... NOTE: add the following to your ~/.bash_profile for any user that will use client tools"
 echo "... " $(ls -1 /u01/app/oracle/product/*/xe/bin/oracle_env.sh)
 
+source $(ls -1 /u01/app/oracle/product/*/xe/bin/oracle_env.sh)
