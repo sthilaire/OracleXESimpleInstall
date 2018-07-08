@@ -20,9 +20,11 @@ cd $ZIPS_PATH/working/apex
 echo "... Install the APEX Upgrade"
 ## Connect and run installation script with default options
 sqlplus -s sys/$XE_DEFAULT_PASSWORD@xe as sysdba @apexins.sql SYSAUX SYSAUX TEMP /i/
-# APEX rest config
-sqlplus -s sys/$XE_DEFAULT_PASSWORD@xe as sysdba @apex_rest_config.sql
+# APEX rest config (different from ORDS REST)
+sqlplus -s sys/$XE_DEFAULT_PASSWORD@xe as sysdba @apex_rest_config_core.sql apex_listener_password apex_rest_public_user_password
 
+
+## This needs to be moved or broken up as the ORDS users do not exist when this is run
 cd $THIS_DIR
 ## Additional config Scripts here
 sqlplus -s sys/$XE_DEFAULT_PASSWORD@xe as sysdba @scripts/xe_adjustments.sql

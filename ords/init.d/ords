@@ -7,10 +7,12 @@
 . /etc/rc.d/init.d/functions
 NAME="Oracle Rest Data Services"
 export JAVA="/usr/bin/java"
-ORDSWAR="/u01/app/oracle/ords/ords.war"
-ORDSUSER="oracle"
 
-export OPTIONS="-Xmx1024m -Xms256m -jar $ORDSWAR"
+## To do - These need to be updated based on the parameter file.
+## If they do not match, the binaries can be misplaced
+ORDSUSER="oracle"
+ORDSWAR="/u01/app/oracle/ords/ords.war"
+export OPTIONS="-Xmx1024m -Xms256m -jar $ORDSWAR standalone"
 export LOGFILE="/u01/app/oracle/ords/logs/ords.log"
 PIDFILE="/u01/app/oracle/ords/logs/ords.pid"
 
@@ -21,9 +23,9 @@ start() {
                 echo ORDS already running: $PID
                 exit 2;
         else
-                su $ORDSUSER -c "$JAVA $OPTIONS > $LOGFILE 2>&1 &"  
+                su $ORDSUSER -c "$JAVA $OPTIONS > $LOGFILE 2>&1 &"
                 RETVAL=$(pgrep -f -u $ORDSUSER $ORDSWAR)
-                echo Started PID: $RETVAL 
+                echo Started PID: $RETVAL
                 echo $RETVAL >>$PIDFILE
 		exit 0;
         fi
@@ -43,10 +45,10 @@ status() {
 stop() {
         echo "Stopping..."
         PID=$(pgrep -u $ORDSUSER -f $ORDSWAR)
-        
+
         if [ -f $PIDFILE ]; then
                 PIDF=$(<$PIDFILE)
-                if [ "$PID" = "$PIDF" ]; then 
+                if [ "$PID" = "$PIDF" ]; then
                     echo -n "Shutting down $NAME "
                     echo
                     kill $PID
@@ -56,7 +58,7 @@ stop() {
 	        echo "Shutting down un-tracked process..."
                 kill $PID
         else
-                echo "ORDS not running"	
+                echo "ORDS not running"
         fi
         return 0
 }

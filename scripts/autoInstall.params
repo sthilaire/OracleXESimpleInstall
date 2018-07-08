@@ -20,7 +20,7 @@ ORDS_INSTALL=Y
 
 # ORDS_PATH: directory where ords binaries will be placed.
 # This is also the location of the apex static files, configuration and logs
-ORDS_PATH=/u01/app/oracle/ords
+ORDS_PATH=/u01/app/ords
 
 # ORDS_USER : Value for ORDS running process
 ORDS_USER=oracle
