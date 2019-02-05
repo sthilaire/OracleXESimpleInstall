@@ -1,6 +1,8 @@
 # OracleXESimpleInstall
 Installation Automation scripts for Oracle XE, APEX, ORDS for OEL Linux
 
+-- New version modified for XE 18c
+
 # Who This Is For
 Do you want to learn Oralce APEX?  Do you want to learn APEX administration? Do you want a playground you can try stuff out in without impacting others? Are you not an infrastructure wizard?
 
