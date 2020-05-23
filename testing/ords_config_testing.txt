@@ -1,0 +1,29 @@
+# ORDS Configuration Testing
+
+-- customized properties
+cat /opt/oracle/ords/ords_service.properties
+source /opt/oracle/ords/ords_service.properties
+
+-- script seteps
+ORDS_CONFIG_DIR="${ORDS_HOME}/config"
+export OPTIONS="-Xmx1024m -Xms256m -jar -DuseOracleHome=true -Dconfig.dir=${ORDS_CONFIG_DIR} ${ORDS_WAR_DIR}/ords.war standalone"
+export LOGFILE="${ORDS_HOME}/logs/ords.log"
+
+-- run command
+$ORDS_JAVA $OPTIONS > $LOGFILE 2>&1
+
+--
+-- https://oracle-base.com/articles/misc/oracle-rest-data-services-ords-standalone-mode
+
+-- from Jason S.
+-- http://jastraub.blogspot.com/2018/11/multitenant-ords-with-local-apex-in-pdbs.html
+su -l oracle -c "$ORACLE_HOME/perl/bin/perl -I $ORACLE_HOME/rdbms/admin $ORACLE_HOME/rdbms/admin/catcon.pl -b create_apex_pub -- --x'grant create session to apex_public_user identified by oracle'"
+su -l oracle -c "$ORACLE_HOME/perl/bin/perl -I $ORACLE_HOME/rdbms/admin $ORACLE_HOME/rdbms/admin/catcon.pl -b create_apex_list -- --x'grant create session to apex_listener identified by oracle'"
+su -l oracle -c "$ORACLE_HOME/perl/bin/perl -I $ORACLE_HOME/rdbms/admin $ORACLE_HOME/rdbms/admin/catcon.pl -b create_apex_rest_pub -- --x'grant create session to apex_rest_public_user identified by oracle'"
+
+
+-- use domain from db
+SQL> show parameter DB_DOMAIN
+
+-- in ords defaults
+<entry key="db.serviceNameSuffix"></entry>

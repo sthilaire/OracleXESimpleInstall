@@ -1,0 +1,46 @@
+-- Personal notes for build testing
+Next steps
+    - Need to debug ORDS installation automation
+    - Desire to automate the connection type Jason outlined
+    - Not sure if the "advanced" config is needed
+    - Need to include logging method for BASH scripts
+    - Rebuilding VM to test JUST ords setup
+
+
+-- Have issue with the HOST file needing an IP address
+-- This prevents the error regarding "port 5500 in use" during config
+hostnamectl set-hostname centos
+
+-- OXAR
+https://github.com/OraOpenSource/OXAR
+
+-- XE - PDB best practices
+https://www.carajandb.com/en/blog/2018/oracle-18-xe-and-multitenant/
+
+-- Tim Hall
+https://oracle-base.com/articles/18c/oracle-db-18c-xe-rpm-installation-on-oracle-linux-6-and-7
+
+-- Multiple PDB setup (Jason Straub)
+https://jastraub.blogspot.com/2018/11/multitenant-ords-with-local-apex-in-pdbs.html
+
+-- Performance
+https://community.oracle.com/thread/4189278
+
+-- Full CentOS - apex installation
+https://dbahelp2018.wordpress.com/install-oracle-xe-18c-using-virtualbox-part-1/
+
+-- XE License
+https://docs.oracle.com/en/database/oracle/oracle-database/18/xelic/licensing-information.html#GUID-0F2574A6-360F-4237-8098-17B02FFC3BB3
+
+-- Linux Install
+https://docs.oracle.com/en/database/oracle/oracle-database/18/xeinl/index.html
+
+-- Nginx Reverse Proxy (Peter Raganitsch)
+http://www.oracle-and-apex.com/the-oracle-apex-reverse-proxy-guide-using-nginx/
+
+-- (Ted Struik) Chock full of examples - Specific link for Proxy
+https://tedstruik-oracle.nl/ords/f?p=25384:1095
+
+-- Apache Proxy (Oracle-Base)
+https://oracle-base.com/articles/misc/apache-reverse-proxy-configuration
+

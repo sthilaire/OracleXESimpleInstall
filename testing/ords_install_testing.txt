@@ -1,0 +1,3 @@
+-- single line command similar to install
+su -l oracle -c "source /home/oracle/XE.env; java -jar -DuseOracleHome=true -Dconfig.dir=/opt/oracle/ords/config /opt/oracle/ords/18.3.0.270.1456/ords.war install --parameterFile /opt/oracle/ords/config/params/ords_params.properties --logDir /opt/oracle/ords/logs"
+

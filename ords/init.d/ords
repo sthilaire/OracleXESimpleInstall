@@ -4,63 +4,65 @@
 # https://warp11.nl/2012/02/apex-listener-startupshutdown-script/
 # http://krisrice.io/2010-12-10-listener-startupshutdown-script/
 #
-. /etc/rc.d/init.d/functions
 NAME="Oracle Rest Data Services"
-export JAVA="/usr/bin/java"
+source /etc/rc.d/init.d/functions
+source /opt/oracle/ords/ords_service.properties
+# Defined in properties file
+# ORDS_HOME
+# ORDS_USER
+# ORDS_WAR_DIR
+# ORDS_JAVA
 
-## To do - These need to be updated based on the parameter file.
-## If they do not match, the binaries can be misplaced
-ORDSUSER="oracle"
-ORDSWAR="/u01/app/oracle/ords/ords.war"
-export OPTIONS="-Xmx1024m -Xms256m -jar $ORDSWAR standalone"
-export LOGFILE="/u01/app/oracle/ords/logs/ords.log"
-PIDFILE="/u01/app/oracle/ords/logs/ords.pid"
+ORDS_CONFIG_DIR="${ORDS_HOME}/config"
+export OPTIONS="-Xmx1024m -Xms256m -jar -DuseOracleHome=true -Dconfig.dir=${ORDS_CONFIG_DIR} ${ORDS_WAR_DIR}/ords.war standalone"
+export LOGFILE="${ORDS_HOME}/logs/ords.log"
+PIDFILE="${LOGFILE}/ords.pid"
 
 start() {
-        echo -n "Starting $NAME: "
-        if [ -f $PIDFILE ]; then
-                PID=$(<$PIDFILE)
-                echo ORDS already running: $PID
-                exit 2;
-        else
-                su $ORDSUSER -c "$JAVA $OPTIONS > $LOGFILE 2>&1 &"
-                RETVAL=$(pgrep -f -u $ORDSUSER $ORDSWAR)
-                echo Started PID: $RETVAL
-                echo $RETVAL >>$PIDFILE
-		exit 0;
-        fi
+    echo -n "Starting $NAME: "
+    if [ -f $PIDFILE ]; then
+        PID=$(<$PIDFILE)
+        echo ORDS already running: $PID
+        exit 2;
+    else
+        su $ORDS_USER -c "$ORDS_JAVA $OPTIONS > $LOGFILE 2>&1 &"
+        RETVAL=$(pgrep -f -u $ORDS_USER $ORDS_WAR_DIR/ords.war)
+        echo Started PID: $RETVAL
+        echo $RETVAL >>$PIDFILE
+        exit 0;
+    fi
 }
 
 status() {
         echo -n "Status $NAME: "
         if [ -f $PIDFILE ]; then
-                PID=$(<$PIDFILE)
-                echo ORDS already running: $PID
-                pgrep -a -F $PIDFILE
+            PID=$(<$PIDFILE)
+            echo ORDS already running: $PID
+            pgrep -a -F $PIDFILE
         else
-                echo ORDS not running
+            echo ORDS not running
         fi
 }
 
 stop() {
-        echo "Stopping..."
-        PID=$(pgrep -u $ORDSUSER -f $ORDSWAR)
+    echo "Stopping..."
+    PID=$(pgrep -u $ORDS_USER -f $ORDS_WAR_DIR/ords.war)
 
-        if [ -f $PIDFILE ]; then
-                PIDF=$(<$PIDFILE)
-                if [ "$PID" = "$PIDF" ]; then
-                    echo -n "Shutting down $NAME "
-                    echo
-                    kill $PID
-                fi
-                rm -f $PIDFILE
-        elif [ -n "$PID" ]; then
-	        echo "Shutting down un-tracked process..."
+    if [ -f $PIDFILE ]; then
+            PIDF=$(<$PIDFILE)
+            if [ "$PID" = "$PIDF" ]; then
+                echo -n "Shutting down $NAME "
+                echo
                 kill $PID
-        else
-                echo "ORDS not running"
-        fi
-        return 0
+            fi
+            rm -f $PIDFILE
+    elif [ -n "$PID" ]; then
+        echo "Shutting down un-tracked process..."
+        kill $PID
+    else
+        echo "ORDS not running"
+    fi
+    return 0
 }
 
 log() {

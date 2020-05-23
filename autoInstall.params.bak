@@ -5,8 +5,7 @@
 
 # OSI_STAGE_DIR: Directory where zips and rpms are located
   OSI_STAGE_DIR=/stage
-
-# OSI_LOG_DIR: Directory used for storing installation activities is derived and set by function
+  OSI_LOG_DIR=./log
 
 #
 # CentOS Adjustments
@@ -56,8 +55,8 @@
 # OSI_APEX_ZIP: If empty, script will find the file apex_*.zip in the OSI_STAGE_DIR
 # OSI_APEX_ZIP=
 
-# OSI_PARAMETERS_LOADED: Flag indicating the parameters have been loaded - no impact on install
+# OSI_PARAMETERS_LOADED: Flag indicating the parameters have been loaded
   OSI_PARAMETERS_LOADED=Y
 
 # OSI_AUTO_DEBUG: set to Y to see expanded script output (script debugging)
-  OSI_AUTO_DEBUG=Y
+  OSI_AUTO_DEBUG=N

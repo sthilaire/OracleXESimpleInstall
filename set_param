@@ -1,0 +1,59 @@
+#!/bin/bash
+# set -x
+#
+# Script to allow easy update of the parameter file.
+#
+# For options:  ./set_param
+#
+
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+l_param_name=$(tr '[:lower:]' '[:upper:]' <<< $1)
+l_param_value=$2
+l_param_file=${THIS_DIR}/autoInstall.params
+
+if [[ -z "${l_param_name}" ]]; then
+    echo "Usage of $BASH_SOURCE"
+    echo "$BASH_SOURCE RESET                  <-- Resets parameters to default values"
+    echo "$BASH_SOURCE SHOW                   <-- Resets parameters to default values"
+    echo "$BASH_SOURCE PARAM_NAME PARAM_VALUE <-- Updates parameter to new value"
+    exit 0
+fi
+
+## Reset command
+if [[ "${l_param_name}" = "RESET" ]]; then
+    read -p "Confirm - this will clear any parameter changes. (Y to confirm) : " l_confirm
+    echo "Confirm = $l_confirm"
+    if [[ "$l_confirm" == "Y" ]]; then
+        cp ${THIS_DIR}/scripts/autoInstall.params.reset $l_param_file
+        echo "$l_param_file reset to default values"
+    else
+        echo "No changes made.."
+    fi
+    exit 0
+elif [[ "${l_param_name}" = "SHOW" ]]; then
+    echo "Current parameter values..."
+    grep "=" ${l_param_file}
+    exit 0
+elif [[ -n "${l_param_name}" ]]; then
+    echo "Current parameter value..."
+    grep "${l_param_name}=" ${l_param_file}
+fi
+
+## Past this point, we require parameter value
+if [[ -z "${l_param_value}" ]] ; then
+    exit 0;
+fi
+
+if [[ -n $(grep "${l_param_name}=" ${l_param_file}) ]]; then
+    # change parameter value
+    sed -i.bak -E "s|${l_param_name}=.+|${l_param_name}=${l_param_value}|" ${l_param_file}
+    # Show the current value
+    echo "Updated parameter value..."
+    grep "${l_param_name}=" ${l_param_file}
+else
+    echo "Current value could not be found. No changes made."
+fi
+
+
+

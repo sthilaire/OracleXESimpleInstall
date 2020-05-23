@@ -1,48 +1,89 @@
-#!/bin/bash
+#!/bin/bash -e
+#
+#  autoInstall.sh
+#
+#  Purpose:
+#    Primary installation script used to orchestrate the compelte process
+#
+#  Parameters:
+#    $1 : Parameter file name
+#
 
-if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root"
-   exit 1
-fi
+echo "=="
+echo "== Script: $BASH_SOURCE"
+echo "=="
 
-# Debug option to show commands
-[ -n "$AUTO_DEBUG" ] && set -x
+#==============================================================================
+#  Step 0: Setup and Verify
+#
 
 # Current directory for relative reference
-export THIS_DIR=$(cd $(dirname "$0") && pwd )
-cd $THIS_DIR
+export OSI_BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export OSI_SCRIPT_DIR="$OSI_BASE_DIR/scripts"
+cd $OSI_BASE_DIR
 
-echo "=== Load Parameters"
-source $THIS_DIR/scripts/auto_load_params.sh $THIS_DIR/scripts/autoInstall.params
+# Load utilility functions
+source $OSI_SCRIPT_DIR/function_definitions.sh
 
-echo "=== Verify files"
-source $THIS_DIR/scripts/auto_verify_files.sh
+f_set_osi_log_dir
+f_start_logging
 
-env | grep ZIPS
+# Test for ROOT user
+f_is_root
 
-if [[ $XE_INSTALL = "Y" ]]
+# Load parameter file
+## OSI_PARAM_FILE is set in the function
+f_load_parameter_file $1
+
+# Debug option to show commands
+[[ $OSI_SCRIPT_DEBUG = "Y" ]] && set -x
+
+echo "Base Directory used: $OSI_BASE_DIR"
+
+
+if [[ $OSI_CENTOS_ADJUST = "Y" ]]
 then
-    echo "=== Install XE Database"
-    $THIS_DIR/scripts/auto_xe_install.sh
+    echo "=== CentOS Adjustments"
+    $OSI_SCRIPT_DIR/centos_pre_install.sh
+else
+    echo "... not installing CentOS tools"
+fi
+
+#==============================================================================
+#  Step 1: Oracle XE
+#
+if [[ $OSI_XE_INSTALL = "Y" ]]
+then
+    echo "=== Install XE"
+    $OSI_SCRIPT_DIR/xe_install.sh $OSI_SCRIPT_DIR $OSI_PARAM_FILE
+    $OSI_SCRIPT_DIR/xe_post_install.sh $OSI_SCRIPT_DIR $OSI_PARAM_FILE
+
 else
     echo "... not installing XE"
 fi
 
-# APEX upgarde before ORDS to make images available
-if [[ $APEX_UPGRADE = "Y" ]]
+#==============================================================================
+#  Step 2: Oracle APEX
+#
+if [[ $OSI_APEX_INSTALL = "Y" ]]
 then
-    echo "=== Upgrade APEX"
-    $THIS_DIR/scripts/auto_apex_upgrade.sh
+    echo "=== Install APEX"
+    $OSI_SCRIPT_DIR/apex_install.sh $OSI_SCRIPT_DIR $OSI_PARAM_FILE
 else
     echo "... not upgrading APEX"
 fi
 
-if [[ $ORDS_INSTALL = "Y" ]]
+#==============================================================================
+#  Step 3: Oracle Rest Data Services
+#
+if [[ $OSI_ORDS_INSTALL = "Y" ]]
 then
     echo "=== Install ORDS"
-    $THIS_DIR/scripts/auto_ords_install.sh
+    $OSI_BASE_DIR/scripts/ords_install.sh $OSI_SCRIPT_DIR $OSI_PARAM_FILE
 else
     echo "... not installing ORDS"
 fi
+
+
 
 echo "=== Done"
